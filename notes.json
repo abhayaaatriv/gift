@@ -1,0 +1,21 @@
+{
+  "p_1775384100387": {
+    "person": {
+      "id": "p_1775384100387",
+      "name": "Himani",
+      "relationship": "girlfriend",
+      "occasion": "birthday",
+      "budget": "30000",
+      "updatedAt": "2026-04-05T10:15:00.396Z"
+    },
+    "notes": [
+      {
+        "id": "1775384113493",
+        "text": "Cute tops, cool",
+        "tag": "mention",
+        "source": "manual",
+        "createdAt": "2026-04-05T10:15:13.493Z"
+      }
+    ]
+  }
+}
