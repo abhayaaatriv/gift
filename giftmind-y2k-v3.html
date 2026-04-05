@@ -455,6 +455,10 @@ html { font-size: clamp(12px, 1.4vw, 16px); }
 
 <!-- ── SIDEBAR ── -->
 <nav class="sidebar">
+  <div class="nav-ico" onclick="openNotepad()" id="notepad-nav">
+    <img id="notepad-nav-icon" src="notepad-icon.png" style="width:28px;height:28px;object-fit:cover;object-position:center;image-rendering:auto;" alt="notepad">
+    <small>NOTES</small>
+  </div>
   <div class="nav-ico act" onclick="goPage('home')" data-page="home"><span>🏠</span><small>HOME</small></div>
   <div class="nav-ico" onclick="goPage('profile')" data-page="profile"><span>📡</span><small>PROFILE</small></div>
   <div class="nav-ico" onclick="goPage('discover')" data-page="discover"><span>🎁</span><small>GIFTS</small></div>
@@ -1356,6 +1360,8 @@ function buildSystemPrompt() {
 LIVE DATA YOU HAVE:
 ${spContext}
 
+${window.notepadContent?.trim() ? `\n\nPERSONAL NOTES (giver wrote about recipient):\n"${window.notepadContent}"` : ''}
+
 Rules:
 - Use the REAL Spotify data above when making recommendations — be specific about artists/genres
 - Keep replies SHORT: 2-4 sentences, punchy, opinionated
@@ -1417,7 +1423,11 @@ async function refreshGifts() {
     spContext = `Real Spotify — top artists: ${artists}. Genres: ${genres}.`;
   }
 
-  const prompt = `Generate 4 personalized gift recommendations for a ${rel.replace(/[^\w\s]/g,'').trim()} for their ${occ.replace(/[^\w\s]/g,'').trim()}. Budget: ₹${budget}.\n\nMusic profile: ${spContext}\nOther profiles: ${Object.values(profileData).map(p=>p.analysis?.slice(0,100)).join('; ')}\n\nFor each gift: Name · Why it fits THIS specific person's music/taste · ₹ price · Indian platform. Be specific — reference actual artists/genres from their data if available.`;
+  const noteContext = window.notepadContent?.trim()
+    ? `\n\nPersonal notes about the recipient (highest priority context):\n"${window.notepadContent.trim()}"`
+    : '';
+
+  const prompt = `Generate 4 personalized gift recommendations for a ${rel.replace(/[^\w\s]/g,'').trim()} for their ${occ.replace(/[^\w\s]/g,'').trim()}. Budget: ₹${budget}.\n\nMusic profile: ${spContext}\nOther profiles: ${Object.values(profileData).map(p=>p.analysis?.slice(0,100)).join('; ')}\n\nFor each gift: Name · Why it fits THIS specific person's music/taste · ₹ price · Indian platform. Be specific — reference actual artists/genres from their data if available.${noteContext}`;
 
   try {
     const res = await fetch(ENDPOINT, { method:'POST', headers:{'Content-Type':'application/json'},
@@ -1606,5 +1616,6 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 </script>
+<script src="notepad.js"></script>
 </body>
 </html>
